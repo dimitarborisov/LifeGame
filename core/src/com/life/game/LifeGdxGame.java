@@ -8,50 +8,66 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
+import com.badlogic.gdx.graphics.FPSLogger;
+
 
 public class LifeGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	ShapeRenderer shapeRenderer;
 	Life l;
-	int bw;
-	int bh;
+	float bw;
+	float bh;
 	int lh;
 	int lw;
 	double time;
+	private float accumulator = 0f;
+	public static final float STEP = 1/10f;
+	FPSLogger fpsLogger;
 
 	@Override
 	public void create() {
 		lh = 100;
 		lw = 100;
 		
+		//0.2
 		time = 0.2;
 		
+		fpsLogger = new FPSLogger();
+		
 		l = new Life(lh, lw);
+
 		l.initRandom();
-		bw = Gdx.graphics.getWidth() / lw;
-		bh = Gdx.graphics.getHeight() / lh;
+		bw = (float)Gdx.graphics.getWidth() / lw;
+		bh = (float)Gdx.graphics.getHeight() / lh;
 
 		batch = new SpriteBatch();
 		shapeRenderer = new ShapeRenderer();
 
-		Gdx.graphics.setContinuousRendering(false);
+		//Gdx.graphics.setContinuousRendering(false);
 		Timer.schedule(new Task(){
             @Override
             public void run() {
+				//l.printBoard();
+				//System.out.println("");
                 l.step();
-                Gdx.graphics.requestRendering();
+                //Gdx.graphics.requestRendering();
             }
         }
         , (float) time        //    (delay)
-        , (float) time     //    (seconds)
+        , (float) time     	  //    (seconds)
     );
-		
-	
-	
 	}
+
 
 	@Override
 	public void render() {
+		
+		innerRender();
+		//fpsLogger.log();
+		
+	}
+	
+	public void innerRender(){
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
@@ -73,7 +89,5 @@ public class LifeGdxGame extends ApplicationAdapter {
 		}
 		
 		shapeRenderer.end();
-
 	}
-
 }
