@@ -9,20 +9,30 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.utils.Timer;
 import com.badlogic.gdx.utils.Timer.Task;
 import com.badlogic.gdx.graphics.FPSLogger;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 
 
 public class LifeGdxGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	ShapeRenderer shapeRenderer;
+	
 	Life l;
+	
 	float bw;
 	float bh;
+	
 	int lh;
 	int lw;
+	
+	float gh;
+	float gw;
+	
 	double time;
 	private float accumulator = 0f;
 	public static final float STEP = 1/10f;
 	FPSLogger fpsLogger;
+	
+	OrthographicCamera cam;
 
 	@Override
 	public void create() {
@@ -31,6 +41,14 @@ public class LifeGdxGame extends ApplicationAdapter {
 		
 		//0.2
 		time = 0.2;
+		
+		cam = new OrthographicCamera();
+		
+		cam.setToOrtho(false,
+                       (float) Gdx.graphics.getWidth(),
+                       (float) Gdx.graphics.getHeight());
+					   
+		cam.update();
 		
 		fpsLogger = new FPSLogger();
 		
@@ -71,6 +89,9 @@ public class LifeGdxGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(1, 1, 1, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
+		cam.update();
+		shapeRenderer.setProjectionMatrix(cam.combined);
+ 
 		shapeRenderer.begin(ShapeType.Filled);
 		shapeRenderer.setColor(0, 0, 0, 0);
 		
